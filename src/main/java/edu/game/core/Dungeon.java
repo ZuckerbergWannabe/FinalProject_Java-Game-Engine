@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/** Generates a connected, room-and-corridor dungeon for each floor. */
 public final class Dungeon {
     public static final int WIDTH = 29;
     public static final int HEIGHT = 21;
@@ -57,6 +58,7 @@ public final class Dungeon {
             rooms.add(room);
         }
         if (rooms.size() < 2) {
+            // A deterministic, fully playable fallback if random placement was unusually sparse.
             rooms.clear();
             for (int y = 0; y < HEIGHT; y++) {
                 for (int x = 0; x < WIDTH; x++) tiles[y][x] = Tile.WALL;
