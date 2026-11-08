@@ -32,4 +32,20 @@ class AIControllerTest {
         controller.update(enemy, new Position(10, 10)); 
         assertEquals(new Position(1, 0), enemy.position());
     }
+
+        @Test void strategyCanBeSwappedAtRuntime() {
+        GameObject enemy = new GameObject("e", "ENEMY", new Position(1, 1), 50);
+        AIController controller = new AIController(new PatrolBehavior());
+        
+        // 1. Patrol moves it right
+        controller.update(enemy, new Position(5, 5));
+        assertEquals(new Position(2, 1), enemy.position());
+        
+        // 2. Swap to Defensive at runtime
+        controller.setBehavior(new DefensiveBehavior());
+        controller.update(enemy, new Position(5, 5));
+        
+        // 3. Defensive moves it away from 5,5
+        assertEquals(new Position(1, 0), enemy.position());
+    }
 }
