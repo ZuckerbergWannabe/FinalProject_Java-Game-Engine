@@ -1,8 +1,9 @@
 package edu.game.moldir.strategy;
 
+import java.util.Objects;
+
 import edu.game.core.GameObject;
 import edu.game.core.Position;
-import java.util.Objects;
 
 public final class AIController {
     private AIBehavior behavior;
@@ -14,5 +15,8 @@ public final class AIController {
         Objects.requireNonNull(agent);
         Objects.requireNonNull(target);
         agent.setPosition(behavior.nextPosition(agent, target));
+    }
+    public Position suggest(GameObject agent, Position target) {
+        return behavior.nextPosition(Objects.requireNonNull(agent), Objects.requireNonNull(target));
     }
 }
