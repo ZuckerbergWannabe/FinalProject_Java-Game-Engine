@@ -1,5 +1,8 @@
 package edu.game.moldir.facade;
 
+import java.util.List;
+import java.util.Locale;
+
 import edu.game.almanzor.adapter.LegacyAudioAdapter;
 import edu.game.almanzor.adapter.LegacyAudioEngine;
 import edu.game.almanzor.bridge.Renderer2D;
@@ -9,8 +12,6 @@ import edu.game.core.GameEngine;
 import edu.game.moldir.strategy.AggressiveBehavior;
 import edu.game.moldir.strategy.DefensiveBehavior;
 import edu.game.moldir.strategy.PatrolBehavior;
-import java.util.List;
-import java.util.Locale;
 
 public final class GameFacade {
     private final GameEngine engine;
@@ -25,6 +26,12 @@ public final class GameFacade {
     public List<String> drawFrame() { return engine.renderFrame(); }
     public String playEffect(String soundId) { return engine.playSound(soundId); }
     public GameEngine engine() { return engine; }
+    public void move(int dx, int dy) { engine.movePlayer(dx, dy); }
+    public void attack() { engine.attack(); }
+    public void heal() { engine.drinkPotion(); }
+    public void interact() { engine.interact(); }
+    public void waitTurn() { engine.waitTurn(); }
+    public void pause() { engine.pauseOrResume(); }
 
     public void switchGraphics(String mode) {
         switch (mode.toUpperCase(Locale.ROOT)) {
@@ -36,6 +43,7 @@ public final class GameFacade {
 
     public void changeEnemyAI(String mode) {
         switch (mode.toUpperCase(Locale.ROOT)) {
+            case "MIXED" -> engine.resetAIBehavior();
             case "AGGRESSIVE" -> engine.setAIBehavior(new AggressiveBehavior());
             case "DEFENSIVE" -> engine.setAIBehavior(new DefensiveBehavior());
             case "PATROL" -> engine.setAIBehavior(new PatrolBehavior());
