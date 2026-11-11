@@ -1,18 +1,45 @@
 @echo off
+setlocal
 cd /d "%~dp0"
-if exist PatternQuest.jar (
-    java -jar PatternQuest.jar %*
-    goto :eof
+
+REM Check Java
+where java >nul 2>&1
+if errorlevel 1 (
+    echo Java is not installed or not in PATH.
+    pause
+    exit /b 1
 )
-where mvn >nul 2>nul
-if %errorlevel%==0 (
+
+REM Show Java version
+java -version
+
+REM Build project if Maven is available
+where mvn >nul 2>&1
+if not errorlevel 1 (
+    echo Building FinalProject...
     call mvn -q -DskipTests package
-    if errorlevel 1 exit /b 1
-    java -jar target\pattern-quest-roguelike-2.0.0.jar %*
-    goto :eof
+    if errorlevel 1 (
+        echo Build failed!
+        pause
+        exit /b 1
+    )
+) else (
+    echo Maven not found. Checking existing JAR...
 )
-if not exist target\classes mkdir target\classes
-(for /r src\main\java %%f in (*.java) do @echo "%%f") > target\sources.txt
-javac --release 17 -encoding UTF-8 -d target\classes @target\sources.txt
-if errorlevel 1 exit /b 1
-java -cp target\classes edu.game.Main %*
+
+REM Run game
+if exist "target\pattern-quest-roguelike-2.0.0.jar" (
+    java -jar "target\pattern-quest-roguelike-2.0.0.jar" %*
+) else if exist "PatternQuest.jar" (
+    java -jar "PatternQuest.jar" %*
+) else (
+    echo No executable JAR found!
+    pause
+    exit /b 1
+)
+
+if errorlevel 1 (
+    echo Game exited with an error.
+    pause
+)
+    
